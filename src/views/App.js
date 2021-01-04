@@ -20,6 +20,14 @@ class App extends React.Component {
     })
   }
 
+  removeTodo = (data) => {
+    let { listTodo } = this.state;
+    listTodo = listTodo.filter(item => {return item.id !== data.id})
+    this.setState({
+      listTodo: listTodo
+    })
+  }
+
   render() {
     let { listTodo } = this.state;
 
@@ -30,7 +38,7 @@ class App extends React.Component {
           <AddNewTodo addNewTodo={this.addNewTodo} />
         </View>
         <View style={{flex: 3}}>
-          <ListTodo listTodo={listTodo} />
+          <ListTodo listTodo={listTodo} removeTodo={this.removeTodo}/>
         </View>
       </View>
     );

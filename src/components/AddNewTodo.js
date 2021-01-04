@@ -16,6 +16,7 @@ class AddNewTodo extends React.Component {
       show: false,
       currentDate: moment(new Date()).format(FOMAT_DATE),
       textInput: '',
+      isUpdate: false
     }
   }
 
@@ -39,6 +40,7 @@ class AddNewTodo extends React.Component {
     let { currentDate, textInput } = this.state;
     let { addNewTodo } = this.props;
     let data = { };
+    data.id = Math.floor(Math.random() * Math.floor(100000)); //random
     data.date = currentDate;
     data.content = textInput;
     addNewTodo(data);
@@ -48,7 +50,7 @@ class AddNewTodo extends React.Component {
     })
   }
   render() {
-    let { show, date, currentDate, textInput }= this.state;
+    let { show, date, currentDate, textInput, isUpdate }= this.state;
     return (
       <View style={styles.container}>
         <View style={styles.inputUser}>
@@ -67,8 +69,9 @@ class AddNewTodo extends React.Component {
         </View>
         <TouchableOpacity style={styles.btnCreate}  onPress={() => this.createNewTodo()}>
         
-        <Text style={{ color: '#efffff'}}>CREATE NOW</Text>
-      
+            {!isUpdate ?
+             <Text style={{ color: '#efffff'}}>CREATE NOW</Text> :
+             <Text style={{ color: 'orange'}}>UPDATE</Text> }
          
         </TouchableOpacity>
 
