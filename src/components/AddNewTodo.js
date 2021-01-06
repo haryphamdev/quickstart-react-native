@@ -16,8 +16,10 @@ class AddNewTodo extends React.Component {
       show: false,
       currentDate: moment(new Date()).format(FOMAT_DATE),
       textInput: '',
-      isUpdate: false
+      isUpdateTodo2: false,
+
     }
+
   }
 
   onChange = (event, selectedDate) => {
@@ -29,7 +31,7 @@ class AddNewTodo extends React.Component {
       })
     }
   };
- 
+
   handleChangeTextInput = (text) => {
     this.setState({
       textInput: text
@@ -39,7 +41,7 @@ class AddNewTodo extends React.Component {
   createNewTodo = () => {
     let { currentDate, textInput } = this.state;
     let { addNewTodo } = this.props;
-    let data = { };
+    let data = {};
     data.id = Math.floor(Math.random() * Math.floor(100000)); //random
     data.date = currentDate;
     data.content = textInput;
@@ -49,16 +51,46 @@ class AddNewTodo extends React.Component {
       textInput: ''
     })
   }
+
+  updateOldTodo = () => {
+    let { currentDate, textInput } = this.state;
+    let { itemUpdate, updateToDoFromChild } = this.props
+    itemUpdate.date = currentDate;
+    itemUpdate.content = textInput;
+    updateToDoFromChild(itemUpdate);
+
+    this.setState({
+      textInput: '',
+      isUpdateTodo2: false
+    })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    let { isUpdateTodo, itemUpdate } = this.props;
+    if (isUpdateTodo == true && itemUpdate !== prevProps.itemUpdate) {
+      this.infoTextInput.focus();
+      this.setState({
+        textInput: itemUpdate.content,
+        isUpdateTodo2: true
+      })
+    }
+  }
+
+
   render() {
-    let { show, date, currentDate, textInput, isUpdate }= this.state;
+    let { show, date, currentDate, textInput, isUpdateTodo2 } = this.state;
+
+
     return (
       <View style={styles.container}>
         <View style={styles.inputUser}>
-          <TextInput 
-          style={styles.textInput} 
-          placeholder="Add a new todo"
-          value={textInput}
-          onChangeText={(text)=>{this.handleChangeTextInput(text)}}
+          <TextInput
+            style={styles.textInput}
+            placeholder="Add a new todo"
+            value={textInput}
+            onChangeText={(text) => { this.handleChangeTextInput(text) }}
+            ref={(input) => { this.infoTextInput = input; }}
+
           />
 
           <TouchableOpacity style={styles.pickDate} onPress={() => this.setState({ show: true })} >
@@ -67,12 +99,12 @@ class AddNewTodo extends React.Component {
           </TouchableOpacity>
 
         </View>
-        <TouchableOpacity style={styles.btnCreate}  onPress={() => this.createNewTodo()}>
-        
-            {!isUpdate ?
-             <Text style={{ color: '#efffff'}}>CREATE NOW</Text> :
-             <Text style={{ color: 'orange'}}>UPDATE</Text> }
-         
+        <TouchableOpacity style={styles.btnCreate}>
+
+          {!isUpdateTodo2 ?
+            <Text onPress={() => this.createNewTodo()} style={{ color: '#efffff' }}>CREATE NOW</Text> :
+            <Text onPress={() => this.updateOldTodo()} style={{ color: 'orange' }}>UPDATE</Text>}
+
         </TouchableOpacity>
 
         {show && (
@@ -136,7 +168,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 3,
     marginTop: 5,
-    marginBottom:  5,
+    marginBottom: 5,
     padding: 5,
     alignSelf: 'flex-start',
     borderColor: "#0095ff",

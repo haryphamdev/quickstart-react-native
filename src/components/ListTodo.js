@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet, View, ScrollView, Text, Animated, TouchableOpacity } from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
-const RightActions = (item, index, progress, dragX, deleteItem) => {
+const RightActions = (item, index, progress, dragX, deleteItem, updateItem) => {
     const scale = dragX.interpolate({
         inputRange: [-100, 0],
         outputRange: [0.7, 0]
@@ -22,7 +22,7 @@ const RightActions = (item, index, progress, dragX, deleteItem) => {
                     </Animated.Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => alert('Delete button pressed')}>
+            <TouchableOpacity onPress={() => updateItem(item, index)}>
 
                 <View style={{ backgroundColor: 'green', justifyContent: 'center' }}>
                     <Animated.Text
@@ -49,11 +49,17 @@ class ListTodo extends React.Component {
     }
 
     deleteItem = (item, index) => {
-      let { removeTodo } = this.props;
-      removeTodo(item);
-      this.refsArray[index].close(); // or this.refsArray[item.id].close(); if you are using custom id
+        let { removeTodo } = this.props;
+        removeTodo(item);
+        this.refsArray[index].close(); // or this.refsArray[item.id].close(); if you are using custom id
     }
-    
+
+    updateItem = (item, index) => {
+        let { updateToDo } =this.props;
+        updateToDo(item);
+        this.refsArray[index].close(); // or this.refsArray[item.id].close(); if you are using custom id
+    }
+
     render() {
         let { listTodo } = this.props;
         return (
@@ -68,17 +74,19 @@ class ListTodo extends React.Component {
                         {
                             listTodo.map((item, index) => {
                                 return (
-                                    <Swipeable
-
-                                        ref={ref => {
-                                            this.refsArray[index] = ref; //or this.refsArray[item.id] 
-                                        }}
-                                        renderRightActions={(progress, dragX) => RightActions(item, index, progress, dragX, this.deleteItem)}>
-                                        <View key={index} style={{ display: 'flex', flexDirection: 'row', padding: 5, borderBottomWidth: 1, marginBottom: 3 }}>
-                                            <Text style={{ width: "50%", textAlign: 'center' }}>{item.date ? item.date : "-"}</Text>
-                                            <Text style={{ width: "50%", textAlign: 'center' }}>{item.content ? item.content : "-"}</Text>
-                                        </View>
-                                    </Swipeable>
+                                    <View key={index}>
+                                        <Swipeable
+                                            ref={ref => {
+                                                this.refsArray[index] = ref; //or this.refsArray[item.id] 
+                                            }}
+                                            renderRightActions={(progress, dragX) => RightActions(item, index, progress, dragX, this.deleteItem, this.updateItem)}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', padding: 5, borderBottomWidth: 1, marginBottom: 3 }}>
+                                                <Text style={{ width: "20%", textAlign: 'center' }}>{item.id ? item.id : "-"}</Text>
+                                                <Text style={{ width: "30%", textAlign: 'center' }}>{item.date ? item.date : "-"}</Text>
+                                                <Text style={{ width: "50%", textAlign: 'center' }}>{item.content ? item.content : "-"}</Text>
+                                            </View>
+                                        </Swipeable>
+                                    </View>
                                 );
                             })
                         }

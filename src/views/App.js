@@ -8,7 +8,9 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      listTodo: []
+      listTodo: [],
+      isUpdateTodo: false,
+      itemUpdate: {}
     }
   }
 
@@ -28,17 +30,39 @@ class App extends React.Component {
     })
   }
 
-  render() {
+  updateToDo = (data) => {
+    this.setState({
+      isUpdateTodo: true,
+      itemUpdate: data
+    })
+  }
+
+  updateToDoFromChild = (data) => {
     let { listTodo } = this.state;
+    let currentTodoIndex = listTodo.findIndex(item => { return item.id === data.id })
+    if (currentTodoIndex > -1) {
+      listTodo[currentTodoIndex].date = data.date;
+      listTodo[currentTodoIndex].content = data.content;
+      this.setState({
+        listTodo: listTodo,
+        isUpdateTodo: false,
+        itemUpdate: {}
+      })
+
+    }
+  }
+
+  render() {
+    let { listTodo, isUpdateTodo, itemUpdate } = this.state;
 
     return (
       <View style={styles.mainContainer}>
         <View style={{flex : 2}}>
           <Text style={styles.text}>To do App with Eric</Text>
-          <AddNewTodo addNewTodo={this.addNewTodo} />
+          <AddNewTodo addNewTodo={this.addNewTodo} isUpdateTodo={isUpdateTodo} itemUpdate={itemUpdate} updateToDoFromChild={this.updateToDoFromChild}/>
         </View>
         <View style={{flex: 3}}>
-          <ListTodo listTodo={listTodo} removeTodo={this.removeTodo}/>
+          <ListTodo listTodo={listTodo} removeTodo={this.removeTodo} updateToDo={this.updateToDo} />
         </View>
       </View>
     );
