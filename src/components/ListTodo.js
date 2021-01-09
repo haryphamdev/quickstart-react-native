@@ -14,7 +14,7 @@ const RightActions = (item, index, progress, dragX, deleteItem, updateItem) => {
                     <Animated.Text
                         style={{
                             color: 'white',
-                            paddingHorizontal: 10,
+                            padding: 5,
                             fontWeight: '600',
                             transform: [{ scale }]
                         }}>
@@ -28,7 +28,7 @@ const RightActions = (item, index, progress, dragX, deleteItem, updateItem) => {
                     <Animated.Text
                         style={{
                             color: 'white',
-                            paddingHorizontal: 10,
+                            padding: 5,
                             fontWeight: '600',
                             transform: [{ scale }]
                         }}>
@@ -64,7 +64,7 @@ class ListTodo extends React.Component {
         let { listTodo } = this.props;
         return (
             <View style={{ display: 'flex', flexDirection: 'column', height: "100%" }}>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 5 }}>
                     <Text style={{ width: '50%', textAlign: 'center' }}>Date</Text>
                     <Text style={{ width: '50%', textAlign: 'center' }}>Content</Text>
                 </View>
@@ -80,7 +80,7 @@ class ListTodo extends React.Component {
                                                 this.refsArray[index] = ref; //or this.refsArray[item.id] 
                                             }}
                                             renderRightActions={(progress, dragX) => RightActions(item, index, progress, dragX, this.deleteItem, this.updateItem)}>
-                                            <View style={{ display: 'flex', flexDirection: 'row', padding: 5, borderBottomWidth: 1, marginBottom: 3 }}>
+                                            <View style={{ display: 'flex', flexDirection: 'row', padding: 5, borderBottomWidth: 1 }}>
                                                 <Text style={{ width: "20%", textAlign: 'center' }}>{item.id ? item.id : "-"}</Text>
                                                 <Text style={{ width: "30%", textAlign: 'center' }}>{item.date ? item.date : "-"}</Text>
                                                 <Text style={{ width: "50%", textAlign: 'center' }}>{item.content ? item.content : "-"}</Text>
